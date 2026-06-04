@@ -5,13 +5,13 @@ const Product = require('./models/Product');
 const app = express();
 app.use(cors());
 
-const PORT = 5050;
+
 
 // This MUST be at the top so Express knows how to read JSON bodies!
 app.use(express.json());
 
 // Connect to MongoDB using the direct local IP address
-mongoose.connect('mongodb://127.0.0.1:27017/kirana-tracker')
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('🔌 Connected to MongoDB safely!'))
   .catch((err) => console.error('❌ Database connection error:', err));
 
