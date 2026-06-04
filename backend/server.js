@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const Product = require('./models/Product');
 const app = express();
+app.use(cors());
 
 const PORT = 5050;
 
