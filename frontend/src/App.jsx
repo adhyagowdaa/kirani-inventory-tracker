@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+const API_URL = "https://kirana-backend-api-zc3s.onrender.com";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ function App() {
   const [category, setCategory] = useState('Dairy');
 
   const fetchProducts = () => {
-    axios.get('http://localhost:5050/api/products')
+    axios.get(`${API_URL}/api/products`)
       .then(res => {
         if (res.data.success) {
           setProducts(res.data.data);
@@ -35,7 +36,7 @@ function App() {
       category
     };
 
-    axios.post('http://localhost:5050/api/products', newProduct)
+    axios.post(`${API_URL}/api/products`, newProduct)
       .then(res => {
         if (res.data.success) {
           fetchProducts();
@@ -50,7 +51,7 @@ function App() {
 
   const handleUpdateStock = (id, newStockValue) => {
     if (newStockValue < 0) return;
-    axios.put(`http://localhost:5050/api/products/${id}`, { currentStock: newStockValue })
+    axios.put(`${API_URL}/api/products/${id}`, { currentStock: newStockValue })
       .then(res => {
         if (res.data.success) {
           fetchProducts();
@@ -61,7 +62,7 @@ function App() {
 
   const handleDeleteProduct = (id) => {
     if (window.confirm("Are you sure you want to remove this item?")) {
-      axios.delete(`http://localhost:5050/api/products/${id}`)
+      axios.delete(`${API_URL}/api/products/${id}`)
         .then(res => {
           if (res.data.success) {
             fetchProducts();
