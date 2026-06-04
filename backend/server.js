@@ -88,6 +88,9 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
+// Dynamic Port Configuration for Cloud Deployment
+const PORT = process.env.PORT || 5050;
+
 app.listen(PORT, () => {
-  console.log(`✅ Server is actively running on: http://localhost:${PORT}`);
+    console.log(`🚀 Server engine is running live on port ${PORT}`);
 });
