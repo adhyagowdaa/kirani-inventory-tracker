@@ -3,23 +3,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const Product = require('./models/Product');
+const authRoutes = require('./routes/authRoutes'); 
 
 const app = express();
 
-app.use(cors({
-    origin: "https://kirani-inventory-tracker.vercel.app/", 
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}));
-const authRoutes = require('./routes/authRoutes'); 
-
-app.use('/api/auth', authRoutes);
-
-
-
-// This MUST be at the top so Express knows how to read JSON bodies!
 app.use(express.json());
 
+app.use(cors({
+  origin: "https://kirani-inventory-tracker.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
+app.use('/api/auth', authRoutes);
 // Connect to MongoDB using the direct local IP address
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('🔌 Connected to MongoDB safely!'))
