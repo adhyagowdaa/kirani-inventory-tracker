@@ -1,42 +1,82 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-exports.register = async (req, res) => {
+// ==========================================
+// REGISTER / SIGNUP CONTROLLER
+// ==========================================
+const register = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ email, password: hashedPassword });
+
+        // 1. Check if the user already exists in the database
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists" });
+        }
+
+        // 2. Hash the password before saving it
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // 3. Create and save the new user record
+        const newUser = new User({
+            email,
+            password: hashedPassword
+        });
+
         await newUser.save();
-        res.status(201).json({ message: "User registered successfully!" });
+        
+        return res.status(201).json({ 
+            message: "User registered successfully!" 
+        });
+
     } catch (error) {
-        console.error("Registration error:", error);
-        res.status(500).json({ error: "Registration failed." });
+        return res.status(500).json({ 
+            message: "Server error during registration", 
+            error: error.message 
+        });
     }
 };
 
-exports.login = async (req, res) => {
+// ==========================================
+// LOGIN CONTROLLER
+// ==========================================
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        
-        console.log("=== LOGIN ATTEMPT INCOMING ===");
-        console.log("Email submitted:", email);
-        
+
+        // 1. Verify that the user exists
         const user = await User.findOne({ email });
-        
-        console.log("Database lookup user found:", user ? "Yes" : "No");
-        if (user) {
-            console.log("User object from DB:", JSON.stringify(user));
+        if (!user) {
+            // Sending a 400 error forces Axios on frontend to drop into catch()
+            return res.status(400).json({ message: "Invalid email or password" });
         }
 
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            console.log("❌ LOGIN FAILED: User not found or password incorrect.");
-            return res.status(401).json({ message: "Invalid credentials" });
+        // 2. Compare incoming plain text password with hashed database password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid email or password" });
         }
 
-        console.log("✅ LOGIN SUCCESSFUL for:", email);
-        res.status(200).json({ message: "Login successful!", userId: user._id });
+        // 3. Success response
+        return res.status(200).json({ 
+            message: "Login successful!",
+            user: {
+                id: user._id,
+                email: user.email
+            }
+        });
+
     } catch (error) {
-        console.error("💥 SYSTEM ERROR DURING LOGIN:", error);
-        res.status(500).json({ error: "Login failed." });
+        return res.status(500).json({ 
+            message: "Server error during login", 
+            error: error.message 
+        });
     }
+};
+
+// Exporting named objects to exactly match your authRoutes expectations
+module.exports = {
+    register,
+    login
 };
