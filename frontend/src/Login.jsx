@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function Login({ onLoginSuccess }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+export default function Login({ onLoginSuccess }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleLogin = async () => {
-        try {
-            // This calls your live backend (the URL from your App.jsx)
-            const response = await axios.post('https://kirana-backend-api-zc3s.onrender.com/api/auth/login', formData);
-            alert('Login successful!');
-            onLoginSuccess(); // This switches the view to your Dashboard
-        } catch (error) {
-            alert('Invalid email or password');
-        }
-    };
+  const handleLogin = async () => {
+    try {
+      const formData = { email, password };
+      // This calls your live backend on Render safely
+      const response = await axios.post('https://kirana-backend-api-zc3s.onrender.com/api/auth/login', formData);
+      alert('Login successful!');
+      onLoginSuccess(); // This switches the view to your Dashboard
+    } catch (error) {
+      alert('Invalid email or password');
+    }
+  };
 
     return (
         <div>
