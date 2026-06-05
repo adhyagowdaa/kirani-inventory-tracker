@@ -22,7 +22,11 @@ const ProductSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true
-  }
+  },
+  ownerId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', ProductSchema);
