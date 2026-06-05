@@ -4,16 +4,8 @@ const bcrypt = require('bcrypt');
 exports.register = async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        // 1. Hash the password before saving
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // 2. Create the new user
-        const newUser = new User({
-            email,
-            password: hashedPassword
-        });
-
+        const newUser = new User({ email, password: hashedPassword });
         await newUser.save();
         res.status(201).json({ message: "User registered successfully!" });
     } catch (error) {
@@ -26,7 +18,6 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         
-        // --- DEBUG LOGS START ---
         console.log("=== LOGIN ATTEMPT INCOMING ===");
         console.log("Email submitted:", email);
         
@@ -36,7 +27,6 @@ exports.login = async (req, res) => {
         if (user) {
             console.log("User object from DB:", JSON.stringify(user));
         }
-        // --- DEBUG LOGS END ---
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
             console.log("❌ LOGIN FAILED: User not found or password incorrect.");
