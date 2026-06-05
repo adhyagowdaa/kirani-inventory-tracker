@@ -8,7 +8,7 @@ function Login({ onLoginSuccess }) {
     const handleLogin = async () => {
         try {
             // This calls your live backend (the URL from your App.jsx)
-            const response = await axios.post('https://kirana-backend-api-zc3s.onrender.com/api/auth/login', { email, password });
+            const response = await axios.post('https://kirani-inventory-tracker.vercel.app//api/auth/login', { email, password });
             alert('Login successful!');
             onLoginSuccess(); // This switches the view to your Dashboard
         } catch (error) {
