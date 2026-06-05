@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function Login({ onLoginSuccess }) {
+export default function Login({ onLoginSuccess, onNavigateToSignup }){
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -78,6 +78,15 @@ export default function Login({ onLoginSuccess }) {
           Login
         </button>
       </form>
+      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#aaa', textAlign: 'center' }}>
+         Don't have an account?{' '}
+        <span 
+        onClick={onNavigateToSignup} 
+        style={{ color: '#3b82f6', cursor: 'pointer', textDecoration: 'underline' }}
+        >
+              Sign up here
+         </span>
+      </p>
     </div>
   );
 }
