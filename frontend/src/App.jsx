@@ -1,18 +1,30 @@
 import React, { useState } from 'react';
 import Login from './Login';
+import Signup from './Signup';
 import Dashboard from './Dashboard';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Can be 'login', 'signup', or 'dashboard'
+  const [view, setView] = useState('login'); 
 
   return (
-    <div className="App">
-      {!isLoggedIn ? (
-        <Login setIsLoggedIn={setIsLoggedIn} />
-      ) : (
-        <Dashboard />
+    <div>
+      {view === 'login' && (
+        <Login 
+          onNavigateToSignup={() => setView('signup')} 
+          onLoginSuccess={() => setView('dashboard')} 
+        />
+      )}
+      
+      {view === 'signup' && (
+        <Signup onNavigateToLogin={() => setView('login')} />
+      )}
+      
+      {view === 'dashboard' && (
+        <Dashboard onLogout={() => setView('login')} />
       )}
     </div>
   );
 }
+
 export default App;
