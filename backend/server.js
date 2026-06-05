@@ -3,9 +3,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const Product = require('./models/Product');
+app.use(cors({
+    origin: "https://kirani-inventory-tracker.vercel.app/", 
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 const authRoutes = require('./routes/authRoutes'); 
 const app = express();
-app.use(cors());
+
 app.use('/api/auth', authRoutes);
 
 
